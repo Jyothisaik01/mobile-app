@@ -5,7 +5,7 @@ export const LOCAL_DEV_IP = '192.168.1.12';
 export const LOCAL_DEV_PORT = '3000';
 
 // Change USE_PROD to true when switching to your deployed cloud backend
-export const USE_PROD = false;
+export const USE_PROD = true;
 
 export const PROD_API_URL = 'https://inventory-backend-api-jdfa.onrender.com';
 

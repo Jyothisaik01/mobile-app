@@ -23,14 +23,33 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "permissions": ["INTERNET", "RECORD_AUDIO"],
+      "permissions": [
+        "INTERNET",
+        "RECORD_AUDIO",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
       "softwareKeyboardLayoutMode": "resize"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Inventory Prime to access your camera for Live AR Virtual Try-On and profile photos.",
+          "microphonePermission": "Allow Inventory Prime to access your microphone for voice assistant search."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Inventory Prime to access your photos to select custom avatars."
+        }
+      ]
     ]
   }
 }
