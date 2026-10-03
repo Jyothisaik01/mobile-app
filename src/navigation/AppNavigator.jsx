@@ -19,7 +19,6 @@ import CompareScreen from '../screens/CompareScreen';
 import CustomerSupportScreen from '../screens/CustomerSupportScreen';
 import colors from '../theme/colors';
 import { useAuth } from '../context/AuthContext';
-import * as SplashScreen from 'expo-splash-screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,28 +35,21 @@ const customDarkTheme = {
   },
 };
 
+function SplashLoadingScreen() {
+  return (
+    <View style={styles.splashContainer}>
+      <Image
+        source={require('../../assets/icon.png')}
+        style={styles.splashIcon}
+        resizeMode="contain"
+      />
+      <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 24 }} />
+    </View>
+  );
+}
+
 export default function AppNavigator() {
   const { isAuthenticated, loading } = useAuth();
-
-  React.useEffect(() => {
-    if (!loading) {
-      SplashScreen.hideAsync().catch(() => {});
-    }
-  }, [loading]);
-
-  // Show splash loading while restoring persistent auth credentials
-  if (loading) {
-    return (
-      <View style={styles.splashContainer}>
-        <Image
-          source={require('../../assets/icon.png')}
-          style={styles.splashIcon}
-          resizeMode="contain"
-        />
-        <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 24 }} />
-      </View>
-    );
-  }
 
   return (
     <NavigationContainer theme={customDarkTheme}>
@@ -68,7 +60,9 @@ export default function AppNavigator() {
           animation: 'fade',
         }}
       >
-        {!isAuthenticated ? (
+        {loading ? (
+          <Stack.Screen name="SplashLoading" component={SplashLoadingScreen} />
+        ) : !isAuthenticated ? (
           // When NOT logged in: opens Login Page directly
           <Stack.Screen name="Login" component={LoginScreen} />
         ) : (

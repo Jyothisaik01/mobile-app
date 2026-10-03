@@ -12,26 +12,6 @@ import { CartProvider } from './src/context/CartContext';
 import { CompareProvider } from './src/context/CompareContext';
 import AppNavigator from './src/navigation/AppNavigator';
 
-import * as SplashScreen from 'expo-splash-screen';
-
-SplashScreen.preventAutoHideAsync().catch(() => {});
-
-// Safely ensure top offset for toasts without crashing if called early
-if (Toast && typeof Toast.show === 'function') {
-  const originalToastShow = Toast.show;
-  Toast.show = (options) => {
-    try {
-      return originalToastShow({
-        position: 'top',
-        topOffset: 52,
-        ...options,
-      });
-    } catch (e) {
-      console.warn('Toast show warning:', e);
-    }
-  };
-}
-
 /* Full-background rich top toasts matching web app (Green for success, Red for error, Blue for info) */
 const toastConfig = {
   success: ({ text1, text2, hide }) => (
@@ -247,8 +227,8 @@ class RootErrorBoundary extends React.Component {
 
 export default function App() {
   return (
-    <SafeAreaProvider style={{ flex: 1, backgroundColor: '#000000' }}>
-      <RootErrorBoundary>
+    <RootErrorBoundary>
+      <SafeAreaProvider style={{ flex: 1, backgroundColor: '#000000' }}>
         <AuthProvider>
           <CartProvider>
             <CompareProvider>
@@ -258,7 +238,7 @@ export default function App() {
             </CompareProvider>
           </CartProvider>
         </AuthProvider>
-      </RootErrorBoundary>
-    </SafeAreaProvider>
+      </SafeAreaProvider>
+    </RootErrorBoundary>
   );
 }
