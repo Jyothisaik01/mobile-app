@@ -7,7 +7,7 @@ export const LOCAL_DEV_PORT = '3000';
 // Change USE_PROD to true when switching to your deployed cloud backend
 export const USE_PROD = false;
 
-export const PROD_API_URL = 'https://inventoryadmin24.vercel.app';
+export const PROD_API_URL = 'https://inventory-backend-api-jdfa.onrender.com';
 
 const getDevUrl = () => {
   // If running inside Android Studio emulator, 10.0.2.2 points to host PC
