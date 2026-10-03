@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "backgroundColor": "#000000",
-      "resizeMode": "contain"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.inventoryapp.mobile"
@@ -28,7 +23,8 @@
         "RECORD_AUDIO",
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "MODIFY_AUDIO_SETTINGS"
       ],
       "softwareKeyboardLayoutMode": "resize"
     },
@@ -49,7 +45,32 @@
         {
           "photosPermission": "Allow Inventory Prime to access your photos to select custom avatars."
         }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#000000"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "newArchEnabled": false
+          },
+          "ios": {
+            "newArchEnabled": false
+          }
+        }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4452d815-139e-4c6c-8908-1d0230638aad"
+      }
+    }
   }
 }

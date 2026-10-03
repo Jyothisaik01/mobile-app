@@ -12,15 +12,25 @@ import { CartProvider } from './src/context/CartContext';
 import { CompareProvider } from './src/context/CompareContext';
 import AppNavigator from './src/navigation/AppNavigator';
 
-// Force all toasts across all screens to render on TOP
-const originalToastShow = Toast.show;
-Toast.show = (options) => {
-  return originalToastShow({
-    ...options,
-    position: 'top',
-    topOffset: 52,
-  });
-};
+import * as SplashScreen from 'expo-splash-screen';
+
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
+// Safely ensure top offset for toasts without crashing if called early
+if (Toast && typeof Toast.show === 'function') {
+  const originalToastShow = Toast.show;
+  Toast.show = (options) => {
+    try {
+      return originalToastShow({
+        position: 'top',
+        topOffset: 52,
+        ...options,
+      });
+    } catch (e) {
+      console.warn('Toast show warning:', e);
+    }
+  };
+}
 
 /* Full-background rich top toasts matching web app (Green for success, Red for error, Blue for info) */
 const toastConfig = {
@@ -191,18 +201,64 @@ const toastConfig = {
   ),
 };
 
+class RootErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('RootErrorBoundary caught error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <View style={{ flex: 1, backgroundColor: '#000000', justifyContent: 'center', alignItems: 'center', padding: 24 }}>
+          <AlertCircle size={48} color="#ef4444" style={{ marginBottom: 16 }} />
+          <Text style={{ fontSize: 20, fontWeight: '800', color: '#ffffff', textAlign: 'center', marginBottom: 8 }}>
+            Inventory Prime
+          </Text>
+          <Text style={{ fontSize: 13, color: '#94a3b8', textAlign: 'center', marginBottom: 20, lineHeight: 18 }}>
+            {this.state.error?.message || 'A launch error occurred. Please tap retry to restart the app.'}
+          </Text>
+          <TouchableOpacity
+            onPress={() => this.setState({ hasError: false, error: null })}
+            activeOpacity={0.8}
+            style={{
+              backgroundColor: '#0071e3',
+              paddingHorizontal: 24,
+              paddingVertical: 12,
+              borderRadius: 12,
+            }}
+          >
+            <Text style={{ color: '#ffffff', fontWeight: '700', fontSize: 14 }}>Retry Launch</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   return (
     <SafeAreaProvider style={{ flex: 1, backgroundColor: '#000000' }}>
-      <AuthProvider>
-        <CartProvider>
-          <CompareProvider>
-            <StatusBar style="light" backgroundColor="#000000" />
-            <AppNavigator />
-            <Toast config={toastConfig} position="top" topOffset={52} />
-          </CompareProvider>
-        </CartProvider>
-      </AuthProvider>
+      <RootErrorBoundary>
+        <AuthProvider>
+          <CartProvider>
+            <CompareProvider>
+              <StatusBar style="light" backgroundColor="#000000" />
+              <AppNavigator />
+              <Toast config={toastConfig} position="top" topOffset={52} />
+            </CompareProvider>
+          </CartProvider>
+        </AuthProvider>
+      </RootErrorBoundary>
     </SafeAreaProvider>
   );
 }

@@ -19,6 +19,7 @@ import CompareScreen from '../screens/CompareScreen';
 import CustomerSupportScreen from '../screens/CustomerSupportScreen';
 import colors from '../theme/colors';
 import { useAuth } from '../context/AuthContext';
+import * as SplashScreen from 'expo-splash-screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,12 @@ const customDarkTheme = {
 
 export default function AppNavigator() {
   const { isAuthenticated, loading } = useAuth();
+
+  React.useEffect(() => {
+    if (!loading) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [loading]);
 
   // Show splash loading while restoring persistent auth credentials
   if (loading) {
